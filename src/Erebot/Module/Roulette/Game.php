@@ -16,19 +16,7 @@
     along with Erebot.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-if (!defined('__DIR__')) {
-  class __FILE_CLASS__ {
-    function  __toString() {
-      $X = debug_backtrace();
-      return dirname($X[1]['file']);
-    }
-  }
-  define('__DIR__', new __FILE_CLASS__);
-} 
-
-include_once(__DIR__.'/exceptions.php');
-
-class   Roulette
+class   Erebot_Module_Roulette_Game
 {
     protected $last_shooter;
     protected $shoot_count;
@@ -47,7 +35,7 @@ class   Roulette
     public function next($shooter)
     {
         if ($shooter == $this->last_shooter)
-            throw new ERouletteCannotGoTwiceInARow();
+            throw new Erebot_Module_Roulette_TwiceInARowException();
 
         $this->last_shooter = $shooter;
         $this->shoot_count++;
@@ -81,7 +69,7 @@ class   Roulette
     public function setChambersCount($nb_chambers)
     {
         if (!is_int($nb_chambers) || $nb_chambers < 2)
-            throw new ERouletteAtLeastTwoChambers();
+            throw new Erebot_Module_Roulette_AtLeastTwoChambersException();
 
         $this->nb_chambers = $nb_chambers;
         $this->reset();

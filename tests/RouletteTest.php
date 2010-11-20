@@ -16,10 +16,8 @@
     along with Erebot.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-include_once(dirname(dirname(__FILE__)).'/src/game.php');
-
 class   RouletteTestHelper
-extends Roulette
+extends Erebot_Module_Roulette_Game
 {
     protected $bang_value;
 
@@ -59,20 +57,20 @@ extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException ERouletteCannotGoTwiceInARow
+     * @expectedException Erebot_Module_Roulette_TwiceInARowException
      */
     public function testTheSamePersonCannotShootTwiceInARow()
     {
         $state = $this->roulette->next('test');
-        if ($state == Roulette::STATE_RELOAD ||
-            $state == Roulette::STATE_BANG)
+        if ($state == Erebot_Module_Roulette_Game::STATE_RELOAD ||
+            $state == Erebot_Module_Roulette_Game::STATE_BANG)
             $this->markTestSkipped('The fun fired on first try.');
 
         $state = $this->roulette->next('test');
     }
 
     /**
-     * @expectedException ERouletteAtLeastTwoChambers
+     * @expectedException Erebot_Module_Roulette_AtLeastTwoChambersException
      */
     public function testThereMustBeAtLeastTwoChambers()
     {
@@ -80,7 +78,7 @@ extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException ERouletteAtLeastTwoChambers
+     * @expectedException Erebot_Module_Roulette_AtLeastTwoChambersException
      */
     public function testThereMustBeAtLeastTwoChambers2()
     {
@@ -88,11 +86,11 @@ extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException ERouletteAtLeastTwoChambers
+     * @expectedException Erebot_Module_Roulette_AtLeastTwoChambersException
      */
     public function testThereMustBeAtLeastTwoChambers3()
     {
-        $this->roulette->setChambersCount('1');
+        $this->roulette->setChambersCount('42');
     }
 
     public function testThereMustBeAtLeastTwoChambers4()
@@ -112,7 +110,10 @@ extends PHPUnit_Framework_TestCase
     public function testBangAtDesignatedPoint()
     {
         $this->roulette->setRandom(1);
-        $this->assertEquals(Roulette::STATE_BANG,   $this->roulette->next('1'));
+        $this->assertEquals(
+            Erebot_Module_Roulette_Game::STATE_BANG,
+            $this->roulette->next('1')
+        );
     }
 
     public function testSpinTheCylinderIfInLastChamber()
@@ -120,10 +121,12 @@ extends PHPUnit_Framework_TestCase
         $this->roulette->setRandom(self::NB_CHAMBERS);
 
         for ($i = 1; $i < self::NB_CHAMBERS-1; $i++)
-            $this->assertEquals(Roulette::STATE_NORMAL,
-                $this->roulette->next((string) $i));
+            $this->assertEquals(
+                Erebot_Module_Roulette_Game::STATE_NORMAL,
+                $this->roulette->next((string) $i)
+            );
 
-        $this->assertEquals(Roulette::STATE_RELOAD,
+        $this->assertEquals(Erebot_Module_Roulette_Game::STATE_RELOAD,
             $this->roulette->next('reload'));
     }
 
@@ -132,11 +135,15 @@ extends PHPUnit_Framework_TestCase
         $this->roulette->setRandom(self::NB_CHAMBERS-1);
 
         for ($i = 1; $i < self::NB_CHAMBERS-1; $i++)
-            $this->assertEquals(Roulette::STATE_NORMAL,
-                $this->roulette->next((string) $i));
+            $this->assertEquals(
+                Erebot_Module_Roulette_Game::STATE_NORMAL,
+                $this->roulette->next((string) $i)
+            );
 
-        $this->assertEquals(Roulette::STATE_BANG,
-            $this->roulette->next('bang'));
+        $this->assertEquals(
+            Erebot_Module_Roulette_Game::STATE_BANG,
+            $this->roulette->next('bang')
+        );
     }
 }
 

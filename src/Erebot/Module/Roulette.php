@@ -16,23 +16,11 @@
     along with Erebot.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-if (!defined('__DIR__')) {
-  class __FILE_CLASS__ {
-    function  __toString() {
-      $X = debug_backtrace();
-      return dirname($X[1]['file']);
-    }
-  }
-  define('__DIR__', new __FILE_CLASS__);
-} 
-
-include_once(__DIR__.'/src/game.php');
-
-class   ErebotModule_Roulette
-extends ErebotModuleBase
+class   Erebot_Module_Roulette
+extends Erebot_Module_Base
 {
     static protected $_metadata = array(
-        'requires'  =>  array('TriggerRegistry', 'Helper'),
+        'requires'  =>  array('Erebot_Module_TriggerRegistry', 'Helper'),
     );
     protected $_roulette = NULL;
 
@@ -41,18 +29,20 @@ extends ErebotModuleBase
         if ($flags & self::RELOAD_MEMBERS) {
             $nb_chambers    = $this->parseInt('nb_chambers', 6);
             try {
-                $this->_roulette = new Roulette($nb_chambers);                
+                $this->_roulette = new Erebot_Module_Roulette_Game($nb_chambers);
             }
-            catch (ERouletteAtLeastTwoChambers $e) {
+            catch (Erebot_Module_Roulette_AtLeastTwoChambers_Exception $e) {
                 throw new Exception($this->_translator->gettext(
                     'There must be at least 2 chambers'));
             }
         }
 
         if ($flags & self::RELOAD_HANDLERS) {
-            $registry   = $this->_connection->getModule('TriggerRegistry',
-                            ErebotConnection::MODULE_BY_NAME);
-            $matchAny  = ErebotUtils::getVStatic($registry, 'MATCH_ANY');
+            $registry   = $this->_connection->getModule(
+                'Erebot_Module_TriggerRegistry',
+                Erebot_Connection::MODULE_BY_NAME
+            );
+            $matchAny  = Erebot_Utils::getVStatic($registry, 'MATCH_ANY');
 
             if (!($flags & self::RELOAD_INIT)) {
                 $this->_connection->removeEventHandler($this->_handler);
@@ -65,28 +55,29 @@ extends ErebotModuleBase
                 throw new Exception($this->_translator->gettext(
                     'Could not register Roulette trigger'));
 
-            $targets    = new ErebotEventTargets(ErebotEventTargets::ORDER_ALLOW_DENY);
+            $targets    = new Erebot_EventTarget(Erebot_EventTarget::ORDER_ALLOW_DENY);
             $targets->addRule(
-                ErebotEventTargets::TYPE_ALLOW,
-                ErebotEventTargets::MATCH_ALL,
-                ErebotEventTargets::MATCH_CHANNEL);
+                Erebot_EventTarget::TYPE_ALLOW,
+                Erebot_EventTarget::MATCH_ALL,
+                Erebot_EventTarget::MATCH_CHANNEL);
 
-            $filter         = new ErebotTextFilter(
+            $filter         = new Erebot_TextFilter(
                                     $this->_mainCfg,
-                                    ErebotTextFilter::TYPE_STATIC,
+                                    Erebot_TextFilter::TYPE_STATIC,
                                     $trigger, TRUE);
-            $this->_handler  = new ErebotEventHandler(
-                                                array($this, 'handleRoulette'),
-                                                'ErebotEventTextChan',
-                                                $targets, $filter);
+            $this->_handler  = new Erebot_EventHandler(
+                array($this, 'handleRoulette'),
+                'Erebot_Event_ChanText',
+                $targets, $filter
+            );
             $this->_connection->addEventHandler($this->_handler);
             $this->registerHelpMethod(array($this, 'getHelp'));
         }
     }
 
-    public function getHelp(iErebotEventMessageText &$event, $words)
+    public function getHelp(Erebot_Interface_Event_TextMessage &$event, $words)
     {
-        if ($event instanceof iErebotEventPrivate) {
+        if ($event instanceof Erebot_Interface_Event_Private) {
             $target = $event->getSource();
             $chan   = NULL;
         }
@@ -105,7 +96,7 @@ extends ErebotModuleBase
 Provides the <b><var name="trigger"/></b> command which makes you play
 in the russian roulette game.
 ');
-            $formatter = new ErebotStyling($msg, $translator);
+            $formatter = new Erebot_Styling($msg, $translator);
             $formatter->assign('trigger', $trigger);
             $this->sendMessage($target, $formatter->render());
             return TRUE;
@@ -119,14 +110,14 @@ in the russian roulette game.
 <b>Usage:</b> !<var name='trigger'/>.
 Makes you press the trigger of the russian roulette gun.
 ");
-            $formatter = new ErebotStyling($msg, $translator);
+            $formatter = new Erebot_Styling($msg, $translator);
             $formatter->assign('trigger', $trigger);
             $this->sendMessage($target, $formatter->render());
             return TRUE;
         }
     }
 
-    public function handleRoulette(iErebotEvent &$event)
+    public function handleRoulette(Erebot_Interface_Event_Generic &$event)
     {
         $nick       = $event->getSource();
         $chan       = $event->getChan();
@@ -138,7 +129,7 @@ Makes you press the trigger of the russian roulette gun.
         try {
             $state = $this->_roulette->next($nick);
         }
-        catch (ERouletteCannotGoTwiceInARow $e) {
+        catch (Erebot_Module_Roulette_TwiceInARowException $e) {
             $this->sendMessage($chan, $translator->gettext(
                 'You cannot go twice in a row'));
             return $event->preventDefault(TRUE);
@@ -147,22 +138,22 @@ Makes you press the trigger of the russian roulette gun.
         switch ($state) {
             case Roulette::STATE_RELOAD:
                 $message    = $translator->gettext('spins the cylinder');
-                $tpl        = new ErebotStyling($message, $translator);
+                $tpl        = new Erebot_Styling($message, $translator);
                 $action     = $tpl->render();
                 // Fall through
             case Roulette::STATE_NORMAL:
                 $message = $translator->gettext('+click+');
-                $tpl = new ErebotStyling($message, $translator);
+                $tpl = new Erebot_Styling($message, $translator);
                 $ending = $tpl->render();
                 break;
 
             case Roulette::STATE_BANG:
                 $message    = $translator->gettext('<b>*BANG*</b>');
-                $tpl        = new ErebotStyling($message, $translator);
+                $tpl        = new Erebot_Styling($message, $translator);
                 $ending     = $tpl->render();
 
                 $message    = $translator->gettext('reloads');
-                $tpl        = new ErebotStyling($message, $translator);
+                $tpl        = new Erebot_Styling($message, $translator);
                 $action     = $tpl->render();
                 break;
         }
@@ -171,7 +162,7 @@ Makes you press the trigger of the russian roulette gun.
             '<var name="chamber"/> of <var name="total"/> =&gt; '.
             '<var name="message"/>');
 
-        $tpl = new ErebotStyling($message, $translator);
+        $tpl = new Erebot_Styling($message, $translator);
         $tpl->assign('nick',    $nick);
         $tpl->assign('chamber', $chamber);
         $tpl->assign('total',   $total);

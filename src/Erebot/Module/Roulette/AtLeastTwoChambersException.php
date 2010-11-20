@@ -16,10 +16,6 @@
     along with Erebot.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-class   ERouletteCannotGoTwiceInARow
+class   Erebot_Module_Roulette_AtLeastTwoChambersException
 extends Exception {}
 
-class   ERouletteAtLeastTwoChambers
-extends Exception {}
-
-?>
