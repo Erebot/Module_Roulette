@@ -49,25 +49,25 @@ extends Erebot_Module_Base
             }
 
             $trigger        = $this->parseString('trigger', 'roulette');
-            $this->_trigger  = $registry->registerTriggers($trigger, $matchAny);
+            $this->_trigger = $registry->registerTriggers($trigger, $matchAny);
             if ($this->_trigger === NULL)
                 throw new Exception($this->_translator->gettext(
                     'Could not register Roulette trigger'));
 
-            $targets    = new Erebot_EventTarget(Erebot_EventTarget::ORDER_ALLOW_DENY);
+            $targets    = new Erebot_EventTarget(
+                Erebot_EventTarget::ORDER_ALLOW_DENY
+            );
             $targets->addRule(
                 Erebot_EventTarget::TYPE_ALLOW,
                 Erebot_EventTarget::MATCH_ALL,
-                Erebot_EventTarget::MATCH_CHANNEL);
+                Erebot_EventTarget::MATCH_CHANNEL
+            );
 
-            $filter         = new Erebot_TextFilter(
-                                    $this->_mainCfg,
-                                    Erebot_TextFilter::TYPE_STATIC,
-                                    $trigger, TRUE);
-            $this->_handler  = new Erebot_EventHandler(
+            $this->_handler = new Erebot_EventHandler(
                 array($this, 'handleRoulette'),
                 'Erebot_Event_ChanText',
-                $targets, $filter
+                $targets,
+                new Erebot_TextFilter_Static($trigger, TRUE)
             );
             $this->_connection->addEventHandler($this->_handler);
             $this->registerHelpMethod(array($this, 'getHelp'));
