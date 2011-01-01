@@ -54,20 +54,12 @@ extends Erebot_Module_Base
                 throw new Exception($this->_translator->gettext(
                     'Could not register Roulette trigger'));
 
-            $targets    = new Erebot_EventTarget(
-                Erebot_EventTarget::ORDER_ALLOW_DENY
-            );
-            $targets->addRule(
-                Erebot_EventTarget::TYPE_ALLOW,
-                Erebot_EventTarget::MATCH_ALL,
-                Erebot_EventTarget::MATCH_CHANNEL
-            );
-
             $this->_handler = new Erebot_EventHandler(
                 array($this, 'handleRoulette'),
-                'Erebot_Event_ChanText',
-                $targets,
-                new Erebot_TextFilter_Static($trigger, TRUE)
+                new Erebot_Event_Match_All(
+                    new Erebot_Event_Match_InstanceOf('Erebot_Event_ChanText'),
+                    new Erebot_Event_Match_TextStatic($trigger, TRUE)
+                )
             );
             $this->_connection->addEventHandler($this->_handler);
             $this->registerHelpMethod(array($this, 'getHelp'));
