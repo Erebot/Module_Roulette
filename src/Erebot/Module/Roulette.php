@@ -127,18 +127,18 @@ Makes you press the trigger of the russian roulette gun.
         }
 
         switch ($state) {
-            case Roulette::STATE_RELOAD:
+            case Erebot_Module_Roulette_Game::STATE_RELOAD:
                 $message    = $translator->gettext('spins the cylinder');
                 $tpl        = new Erebot_Styling($message, $translator);
                 $action     = $tpl->render();
                 // Fall through
-            case Roulette::STATE_NORMAL:
+            case Erebot_Module_Roulette_Game::STATE_NORMAL:
                 $message = $translator->gettext('+click+');
                 $tpl = new Erebot_Styling($message, $translator);
                 $ending = $tpl->render();
                 break;
 
-            case Roulette::STATE_BANG:
+            case Erebot_Module_Roulette_Game::STATE_BANG:
                 $message    = $translator->gettext('<b>*BANG*</b>');
                 $tpl        = new Erebot_Styling($message, $translator);
                 $ending     = $tpl->render();
