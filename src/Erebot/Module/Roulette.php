@@ -24,7 +24,7 @@ extends Erebot_Module_Base
     );
     protected $_roulette = NULL;
 
-    public function reload($flags)
+    public function _reload($flags)
     {
         if ($flags & self::RELOAD_MEMBERS) {
             $nb_chambers    = $this->parseInt('nb_chambers', 6);
@@ -64,6 +64,10 @@ extends Erebot_Module_Base
             $this->_connection->addEventHandler($this->_handler);
             $this->registerHelpMethod(array($this, 'getHelp'));
         }
+    }
+
+    protected function _unload()
+    {
     }
 
     public function getHelp(Erebot_Interface_Event_TextMessage &$event, $words)
