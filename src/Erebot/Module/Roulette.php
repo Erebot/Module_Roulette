@@ -57,7 +57,7 @@ extends Erebot_Module_Base
             $this->_handler = new Erebot_EventHandler(
                 array($this, 'handleRoulette'),
                 new Erebot_Event_Match_All(
-                    new Erebot_Event_Match_InstanceOf('Erebot_Event_ChanText'),
+                    new Erebot_Event_Match_InstanceOf('Erebot_Interface_Event_ChanText'),
                     new Erebot_Event_Match_TextStatic($trigger, TRUE)
                 )
             );
@@ -70,9 +70,9 @@ extends Erebot_Module_Base
     {
     }
 
-    public function getHelp(Erebot_Interface_Event_TextMessage &$event, $words)
+    public function getHelp(Erebot_Interface_Event_Base_TextMessage $event, $words)
     {
-        if ($event instanceof Erebot_Interface_Event_Private) {
+        if ($event instanceof Erebot_Interface_Event_Base_Private) {
             $target = $event->getSource();
             $chan   = NULL;
         }
@@ -112,7 +112,7 @@ Makes you press the trigger of the russian roulette gun.
         }
     }
 
-    public function handleRoulette(Erebot_Interface_Event_Generic &$event)
+    public function handleRoulette(Erebot_Interface_Event_ChanText $event)
     {
         $nick       = $event->getSource();
         $chan       = $event->getChan();
