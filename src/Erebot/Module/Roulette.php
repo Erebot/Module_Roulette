@@ -19,9 +19,6 @@
 class   Erebot_Module_Roulette
 extends Erebot_Module_Base
 {
-    static protected $_metadata = array(
-        'requires'  =>  array('Erebot_Module_TriggerRegistry', 'Helper'),
-    );
     protected $_roulette = NULL;
 
     public function _reload($flags)
