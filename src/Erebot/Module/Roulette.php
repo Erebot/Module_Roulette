@@ -26,7 +26,8 @@ extends Erebot_Module_Base
         if ($flags & self::RELOAD_MEMBERS) {
             $nb_chambers    = $this->parseInt('nb_chambers', 6);
             try {
-                $this->_roulette = new Erebot_Module_Roulette_Game($nb_chambers);
+                $this->_roulette =
+                    new Erebot_Module_Roulette_Game($nb_chambers);
             }
             catch (Erebot_Module_Roulette_AtLeastTwoChambers_Exception $e) {
                 throw new Exception($this->_translator->gettext(
@@ -52,9 +53,11 @@ extends Erebot_Module_Base
                     'Could not register Roulette trigger'));
 
             $this->_handler = new Erebot_EventHandler(
-                array($this, 'handleRoulette'),
+                new Erebot_Callable(array($this, 'handleRoulette')),
                 new Erebot_Event_Match_All(
-                    new Erebot_Event_Match_InstanceOf('Erebot_Interface_Event_ChanText'),
+                    new Erebot_Event_Match_InstanceOf(
+                        'Erebot_Interface_Event_ChanText'
+                    ),
                     new Erebot_Event_Match_TextStatic($trigger, TRUE)
                 )
             );
