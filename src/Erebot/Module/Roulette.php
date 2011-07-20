@@ -112,7 +112,10 @@ Makes you press the trigger of the russian roulette gun.
         }
     }
 
-    public function handleRoulette(Erebot_Interface_Event_ChanText $event)
+    public function handleRoulette(
+        Erebot_Interface_EventHandler   $handler,
+        Erebot_Interface_Event_ChanText $event
+    )
     {
         $nick       = $event->getSource();
         $chan       = $event->getChan();
