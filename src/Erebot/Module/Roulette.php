@@ -23,6 +23,8 @@ extends Erebot_Module_Base
 
     public function _reload($flags)
     {
+        $translator = $this->getTranslator(FALSE);
+
         if ($flags & self::RELOAD_MEMBERS) {
             $nb_chambers    = $this->parseInt('nb_chambers', 6);
             try {
@@ -30,7 +32,7 @@ extends Erebot_Module_Base
                     new Erebot_Module_Roulette_Game($nb_chambers);
             }
             catch (Erebot_Module_Roulette_AtLeastTwoChambers_Exception $e) {
-                throw new Exception($this->_translator->gettext(
+                throw new Exception($translator->gettext(
                     'There must be at least 2 chambers'));
             }
         }
@@ -49,7 +51,7 @@ extends Erebot_Module_Base
             $trigger        = $this->parseString('trigger', 'roulette');
             $this->_trigger = $registry->registerTriggers($trigger, $matchAny);
             if ($this->_trigger === NULL)
-                throw new Exception($this->_translator->gettext(
+                throw new Exception($translator->gettext(
                     'Could not register Roulette trigger'));
 
             $this->_handler = new Erebot_EventHandler(
