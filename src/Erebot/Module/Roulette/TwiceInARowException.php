@@ -17,5 +17,7 @@
 */
 
 class   Erebot_Module_Roulette_TwiceInARowException
-extends Exception {}
+extends Exception
+{
+}
 

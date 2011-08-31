@@ -18,35 +18,35 @@
 
 class   Erebot_Module_Roulette_Game
 {
-    protected $last_shooter;
-    protected $shoot_count;
-    protected $shoot_to_bang;
-    protected $nb_chambers;
+    protected $_lastShooter;
+    protected $_shootCount;
+    protected $_shootToBang;
+    protected $_nbChambers;
 
     const STATE_NORMAL      = 'normal';
     const STATE_RELOAD      = 'reload';
     const STATE_BANG        = 'bang';
 
-    public function __construct($nb_chambers)
+    public function __construct($nbChambers)
     {
-        $this->setChambersCount($nb_chambers);
+        $this->setChambersCount($nbChambers);
     }
 
     public function next($shooter)
     {
-        if ($shooter == $this->last_shooter)
+        if ($shooter == $this->_lastShooter)
             throw new Erebot_Module_Roulette_TwiceInARowException();
 
-        $this->last_shooter = $shooter;
-        $this->shoot_count++;
+        $this->_lastShooter = $shooter;
+        $this->_shootCount++;
 
-        if ($this->shoot_count == $this->nb_chambers-1 &&
-            $this->shoot_to_bang == $this->nb_chambers) {
+        if ($this->_shootCount == $this->_nbChambers-1 &&
+            $this->_shootToBang == $this->_nbChambers) {
             $this->reset();
             return self::STATE_RELOAD;
         }
 
-        if ($this->shoot_count == $this->shoot_to_bang) {
+        if ($this->_shootCount == $this->_shootToBang) {
             $this->reset();
             return self::STATE_BANG;
         }
@@ -56,9 +56,9 @@ class   Erebot_Module_Roulette_Game
 
     public function reset()
     {
-        $this->shoot_to_bang    = $this->getRandom($this->nb_chambers);
-        $this->shoot_count      = 0;
-        $this->last_shooter     = NULL;
+        $this->_shootToBang = $this->getRandom($this->_nbChambers);
+        $this->_shootCount  = 0;
+        $this->_lastShooter = NULL;
     }
 
     protected function getRandom($max)
@@ -66,24 +66,23 @@ class   Erebot_Module_Roulette_Game
         return mt_rand(1, $max);
     }
 
-    public function setChambersCount($nb_chambers)
+    public function setChambersCount($nbChambers)
     {
-        if (!is_int($nb_chambers) || $nb_chambers < 2)
+        if (!is_int($nbChambers) || $nbChambers < 2)
             throw new Erebot_Module_Roulette_AtLeastTwoChambersException();
 
-        $this->nb_chambers = $nb_chambers;
+        $this->_nbChambers = $nbChambers;
         $this->reset();
     }
 
     public function getPassedChambersCount()
     {
-        return $this->shoot_count;
+        return $this->_shootCount;
     }
 
     public function getChambersCount()
     {
-        return $this->nb_chambers;
+        return $this->_nbChambers;
     }
 }
 
-?>

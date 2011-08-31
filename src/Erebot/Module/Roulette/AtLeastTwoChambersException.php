@@ -17,5 +17,7 @@
 */
 
 class   Erebot_Module_Roulette_AtLeastTwoChambersException
-extends Exception {}
+extends Exception
+{
+}
 
