@@ -10,6 +10,12 @@ msgstr  "Vous ne pouvez pas tirer 2 fois d'affilée"
 msgid   "There must be at least 2 chambers"
 msgstr  "Il doit y avoir au moins 2 chambres"
 #
+# File: src/Erebot/Module/Roulette.php, line: 98
+msgid   "Provides the <b><var name=\"trigger\"/></b> command which makes you "
+        "play in the russian roulette game."
+msgstr  "Fournit la commande <b><var name=\"trigger\"/></b> qui vous fait "
+        "jouer à la Roulette Russe."
+#
 msgid   "Could not register Roulette trigger"
 msgstr  "Impossible d'enregistrer le déclencheur pour le jeu de la Roulette"
 #
@@ -18,34 +24,27 @@ msgid   "<var name=\"nick\"/>: chamber <var name=\"chamber\"/> of <var name="
 msgstr  "<var name=\"nick\"/> : chambre <var name=\"chamber\"/> sur <var name="
         "\"total\"/> =&gt; <var name=\"message\"/>"
 #
+# File: src/Erebot/Module/Roulette.php, line: 112
+msgid   "<b>Usage:</b> !<var name='trigger'/>. Makes you press the trigger of "
+        "the russian roulette gun."
+msgstr  "<b>Usage :</b> !<var name='trigger'/>. Appuie sur la gachette du "
+        "pistolet de la Roulette Russe."
+#
 msgid   "<b>*BANG*</b>"
 msgstr  "<b>*BANG*</b>"
 #
 msgid   "+click+"
 msgstr  "+clic+"
 #
-msgid   "\n"
-        "Provides the <b><var name=\"trigger\"/></b> command which makes you "
-        "play\n"
-        "in the russian roulette game.\n"
-msgstr  "\n"
-        "Fournit la commande <b><var name=\"trigger\"/></b> qui vous fait "
-        "jouer à la Roulette Russe.\n"
-#
-msgid   "\n"
-        "<b>Usage:</b> !<var name='trigger'/>.\n"
-        "Makes you press the trigger of the russian roulette gun.\n"
-msgstr  "\n"
-        "<b>Usage :</b> !<var name='trigger'/>.\n"
-        "Appuie sur la gachette du pistolet de la Roulette Russe.\n"
-#
 msgid   ""
 msgstr  "Project-Id-Version: Erebot_Module_Roulette 0.5.0\n"
         "Report-Msgid-Bugs-To: i18n@erebot.net\n"
-        "POT-Creation-Date: 2011-06-07 01:06+0200\n"
+        "POT-Creation-Date: 2011-09-10 08:32+0200\n"
         "PO-Revision-Date: 2011-04-16 12:25+0200\n"
         "Last-Translator: \n"
         "Language-Team: \n"
+        "Language: \n"
         "MIME-Version: 1.0\n"
         "Content-Type: text/plain; charset=utf-8\n"
         "Content-Transfer-Encoding: 8bit\n"
+
