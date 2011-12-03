@@ -23,7 +23,7 @@ extends Erebot_Module_Base
 
     public function _reload($flags)
     {
-        $translator = $this->getTranslator(FALSE);
+        $fmt = $this->getFormatter(FALSE);
 
         if ($flags & self::RELOAD_MEMBERS) {
             $nbChambers    = $this->parseInt('nb_chambers', 6);
@@ -33,7 +33,7 @@ extends Erebot_Module_Base
             }
             catch (Erebot_Module_Roulette_AtLeastTwoChambers_Exception $e) {
                 throw new Exception(
-                    $translator->gettext('There must be at least 2 chambers')
+                    $fmt->_('There must be at least 2 chambers')
                 );
             }
         }
@@ -53,7 +53,7 @@ extends Erebot_Module_Base
             $this->_trigger = $registry->registerTriggers($trigger, $matchAny);
             if ($this->_trigger === NULL)
                 throw new Exception(
-                    $translator->gettext('Could not register Roulette trigger')
+                    $fmt->_('Could not register Roulette trigger')
                 );
 
             $this->_handler = new Erebot_EventHandler(
@@ -86,7 +86,7 @@ extends Erebot_Module_Base
         else
             $target = $chan = $event->getChan();
 
-        $translator = $this->getTranslator($chan);
+        $fmt        = $this->getFormatter($chan);
         $trigger    = $this->parseString('trigger', 'roulette');
 
         $bot        = $this->_connection->getBot();
@@ -94,13 +94,12 @@ extends Erebot_Module_Base
         $nbArgs     = count($words);
 
         if ($nbArgs == 1 && $words[0] == $moduleName) {
-            $msg = $translator->gettext(
+            $msg = $fmt->_(
                 'Provides the <b><var name="trigger"/></b> command which '.
-                'makes you play in the russian roulette game.'
+                'makes you play in the russian roulette game.',
+                arra(y'trigger' => $trigger)
             );
-            $formatter = new Erebot_Styling($msg, $translator);
-            $formatter->assign('trigger', $trigger);
-            $this->sendMessage($target, $formatter->render());
+            $this->sendMessage($target, $msg);
             return TRUE;
         }
 
@@ -108,13 +107,12 @@ extends Erebot_Module_Base
             return FALSE;
 
         if ($words[1] == $trigger) {
-            $msg = $translator->gettext(
+            $msg = $fmt->_(
                 "<b>Usage:</b> !<var name='trigger'/>. Makes you press ".
-                "the trigger of the russian roulette gun."
+                "the trigger of the russian roulette gun.",
+                array('trigger' => $trigger)
             );
-            $formatter = new Erebot_Styling($msg, $translator);
-            $formatter->assign('trigger', $trigger);
-            $this->sendMessage($target, $formatter->render());
+            $this->sendMessage($target, $msg);
             return TRUE;
         }
     }
@@ -129,7 +127,7 @@ extends Erebot_Module_Base
         $action     = NULL;
         $chamber    = $this->_roulette->getPassedChambersCount()+1;
         $total      = $this->_roulette->getChambersCount();
-        $translator = $this->getTranslator($chan);
+        $fmt        = $this->getFormatter($chan);
 
         try {
             $state = $this->_roulette->next($nick);
@@ -137,45 +135,36 @@ extends Erebot_Module_Base
         catch (Erebot_Module_Roulette_TwiceInARowException $e) {
             $this->sendMessage(
                 $chan,
-                $translator->gettext('You cannot go twice in a row')
+                $fmt->_('You cannot go twice in a row')
             );
             return $event->preventDefault(TRUE);
         }
 
         switch ($state) {
             case Erebot_Module_Roulette_Game::STATE_RELOAD:
-                $message    = $translator->gettext('spins the cylinder');
-                $tpl        = new Erebot_Styling($message, $translator);
-                $action     = $tpl->render();
+                $action = $fmt->_('spins the cylinder');
                 // Fall through
             case Erebot_Module_Roulette_Game::STATE_NORMAL:
-                $message = $translator->gettext('+click+');
-                $tpl = new Erebot_Styling($message, $translator);
-                $ending = $tpl->render();
+                $ending = $fmt->_('+click+');
                 break;
 
             case Erebot_Module_Roulette_Game::STATE_BANG:
-                $message    = $translator->gettext('<b>*BANG*</b>');
-                $tpl        = new Erebot_Styling($message, $translator);
-                $ending     = $tpl->render();
-
-                $message    = $translator->gettext('reloads');
-                $tpl        = new Erebot_Styling($message, $translator);
-                $action     = $tpl->render();
+                $ending = $fmt->_('<b>*BANG*</b>');
+                $action = $fmt->_('reloads');
                 break;
         }
 
-        $message = $translator->gettext(
+        $msg = $fmt->_(
             '<var name="nick"/>: chamber <var name="chamber"/> of '.
-            '<var name="total"/> =&gt; <var name="message"/>'
+            '<var name="total"/> =&gt; <var name="message"/>',
+            array(
+                'nick' => $nick,
+                'chamber' => $chamber,
+                'total' => $total,
+                'message' => $ending,
+            )
         );
-
-        $tpl = new Erebot_Styling($message, $translator);
-        $tpl->assign('nick', $nick);
-        $tpl->assign('chamber', $chamber);
-        $tpl->assign('total', $total);
-        $tpl->assign('message', $ending);
-        $this->sendMessage($chan, $tpl->render());
+        $this->sendMessage($chan, $msg);
 
         if ($action !== NULL)
             $this->sendCommand("PRIVMSG $chan :\001ACTION $action\001");
