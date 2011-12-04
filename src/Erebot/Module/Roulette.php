@@ -97,7 +97,7 @@ extends Erebot_Module_Base
             $msg = $fmt->_(
                 'Provides the <b><var name="trigger"/></b> command which '.
                 'makes you play in the russian roulette game.',
-                arra(y'trigger' => $trigger)
+                array('trigger' => $trigger)
             );
             $this->sendMessage($target, $msg);
             return TRUE;
