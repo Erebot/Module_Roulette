@@ -26,7 +26,7 @@ extends Erebot_Module_Base
         $fmt = $this->getFormatter(FALSE);
 
         if ($flags & self::RELOAD_MEMBERS) {
-            $nbChambers    = $this->parseInt('nb_chambers', 6);
+            $nbChambers    = $this->parseInt('chambers', 6);
             try {
                 $this->_roulette =
                     new Erebot_Module_Roulette_Game($nbChambers);
