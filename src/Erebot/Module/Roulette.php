@@ -16,11 +16,30 @@
     along with Erebot.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * \brief
+ *      A module that provides an implementation
+ *      of a Russian Roulette game.
+ */
 class   Erebot_Module_Roulette
 extends Erebot_Module_Base
 {
+    /// The actual Russian Roulette gun.
     protected $_roulette = NULL;
 
+
+    /**
+     * This method is called whenever the module is (re)loaded.
+     *
+     * \param int $flags
+     *      A bitwise OR of the Erebot_Module_Base::RELOAD_*
+     *      constants. Your method should take proper actions
+     *      depending on the value of those flags.
+     *
+     * \note
+     *      See the documentation on individual RELOAD_*
+     *      constants for a list of possible values.
+     */
     public function _reload($flags)
     {
         $fmt = $this->getFormatter(FALSE);
@@ -70,10 +89,18 @@ extends Erebot_Module_Base
         }
     }
 
-    protected function _unload()
-    {
-    }
-
+    /**
+     * Provides help about this module.
+     *
+     * \param Erebot_Interface_Event_Base_TextMessage $event
+     *      Some help request.
+     *
+     * \param array $words
+     *      Parameters passed with the request. This is the same
+     *      as this module's name when help is requested on the
+     *      module itself (in opposition with help on a specific
+     *      command provided by the module).
+     */
     public function getHelp(
         Erebot_Interface_Event_Base_TextMessage $event,
                                                 $words
@@ -117,6 +144,18 @@ extends Erebot_Module_Base
         }
     }
 
+    /**
+     * Handles a request to pull the trigger
+     * of the Russian Roulette gun.
+     *
+     * \param Erebot_Interface_EventHandler $handler
+     *      Handler that triggered this event.
+     *
+     * \param Erebot_Interface_Event_Base_ChanText $event
+     *      A request to pull the trigger.
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function handleRoulette(
         Erebot_Interface_EventHandler   $handler,
         Erebot_Interface_Event_ChanText $event
@@ -158,10 +197,10 @@ extends Erebot_Module_Base
             '<var name="nick"/>: chamber <var name="chamber"/> of '.
             '<var name="total"/> =&gt; <var name="message"/>',
             array(
-                'nick' => $nick,
-                'chamber' => $chamber,
-                'total' => $total,
-                'message' => $ending,
+                'nick'      => $nick,
+                'chamber'   => $chamber,
+                'total'     => $total,
+                'message'   => $ending,
             )
         );
         $this->sendMessage($chan, $msg);

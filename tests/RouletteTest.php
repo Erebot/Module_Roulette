@@ -19,23 +19,23 @@
 class   RouletteTestHelper
 extends Erebot_Module_Roulette_Game
 {
-    protected $bang_value;
+    protected $_bangValue;
 
     public function __construct($nb_chambers)
     {
         parent::__construct($nb_chambers);
-        $this->bang_value   = parent::getRandom($nb_chambers);
+        $this->_bangValue = parent::_getRandom($nb_chambers);
     }
 
     public function setRandom($randomValue)
     {
-        $this->bang_value = $randomValue;
+        $this->_bangValue = $randomValue;
         $this->reset();
     }
 
-    public function getRandom($max)
+    public function _getRandom($max)
     {
-        return $this->bang_value;
+        return $this->_bangValue;
     }
 }
 
