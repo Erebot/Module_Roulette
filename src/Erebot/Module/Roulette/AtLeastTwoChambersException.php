@@ -16,6 +16,11 @@
     along with Erebot.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * \brief
+ *      An exception thrown when the gun contains
+ *      less than two chambers.
+ */
 class   Erebot_Module_Roulette_AtLeastTwoChambersException
 extends Exception
 {
