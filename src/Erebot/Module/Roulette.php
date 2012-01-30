@@ -39,6 +39,8 @@ extends Erebot_Module_Base
      * \note
      *      See the documentation on individual RELOAD_*
      *      constants for a list of possible values.
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function _reload($flags)
     {
@@ -116,7 +118,6 @@ extends Erebot_Module_Base
         $fmt        = $this->getFormatter($chan);
         $trigger    = $this->parseString('trigger', 'roulette');
 
-        $bot        = $this->_connection->getBot();
         $moduleName = strtolower(get_class());
         $nbArgs     = count($words);
 
@@ -155,6 +156,7 @@ extends Erebot_Module_Base
      *      A request to pull the trigger.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function handleRoulette(
         Erebot_Interface_EventHandler   $handler,
