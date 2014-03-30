@@ -16,13 +16,13 @@
     along with Erebot.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+namespace Erebot\Module\Roulette;
+
 /**
  * \brief
  *      An exception thrown when someone tries to use
  *      the gun twice in a row.
  */
-class   Erebot_Module_Roulette_TwiceInARowException
-extends Exception
+class TwiceInARowException extends \Exception
 {
 }
-

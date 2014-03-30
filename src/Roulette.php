@@ -16,23 +16,24 @@
     along with Erebot.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+namespace Erebot\Module;
+
 /**
  * \brief
  *      A module that provides an implementation
  *      of a Russian Roulette game.
  */
-class   Erebot_Module_Roulette
-extends Erebot_Module_Base
+class Roulette extends \Erebot\Module\Base
 {
     /// The actual Russian Roulette gun.
-    protected $_roulette = NULL;
+    protected $roulette = null;
 
 
     /**
      * This method is called whenever the module is (re)loaded.
      *
      * \param int $flags
-     *      A bitwise OR of the Erebot_Module_Base::RELOAD_*
+     *      A bitwise OR of the Erebot::Module::Base::RELOAD_*
      *      constants. Your method should take proper actions
      *      depending on the value of those flags.
      *
@@ -42,51 +43,49 @@ extends Erebot_Module_Base
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public function _reload($flags)
+    public function reload($flags)
     {
-        $fmt = $this->getFormatter(FALSE);
+        $fmt = $this->getFormatter(false);
 
         if ($flags & self::RELOAD_MEMBERS) {
             $nbChambers    = $this->parseInt('chambers', 6);
             try {
-                $this->_roulette =
-                    new Erebot_Module_Roulette_Game($nbChambers);
-            }
-            catch (Erebot_Module_Roulette_AtLeastTwoChambers_Exception $e) {
-                throw new Exception(
+                $this->roulette =
+                    new \Erebot\Module\Roulette\Game($nbChambers);
+            } catch (\Erebot\Module\Roulette\AtLeastTwoChambersException $e) {
+                throw new \Exception(
                     $fmt->_('There must be at least 2 chambers')
                 );
             }
         }
 
         if ($flags & self::RELOAD_HANDLERS) {
-            $registry   = $this->_connection->getModule(
-                'Erebot_Module_TriggerRegistry'
+            $registry   = $this->connection->getModule(
+                '\\Erebot\\Module\\TriggerRegistry'
             );
-            $matchAny  = Erebot_Utils::getVStatic($registry, 'MATCH_ANY');
-
             if (!($flags & self::RELOAD_INIT)) {
-                $this->_connection->removeEventHandler($this->_handler);
-                $registry->freeTriggers($this->_trigger, $matchAny);
+                $this->connection->removeEventHandler($this->handler);
+                $registry->freeTriggers($this->trigger, $registry::MATCH_ANY);
             }
 
             $trigger        = $this->parseString('trigger', 'roulette');
-            $this->_trigger = $registry->registerTriggers($trigger, $matchAny);
-            if ($this->_trigger === NULL)
-                throw new Exception(
+            $this->trigger = $registry->registerTriggers($trigger, $registry::MATCH_ANY);
+            if ($this->trigger === null) {
+                throw new \Exception(
                     $fmt->_('Could not register Roulette trigger')
                 );
+            }
 
-            $this->_handler = new Erebot_EventHandler(
-                new Erebot_Callable(array($this, 'handleRoulette')),
-                new Erebot_Event_Match_All(
-                    new Erebot_Event_Match_InstanceOf(
-                        'Erebot_Interface_Event_ChanText'
+            $this->handler = new \Erebot\EventHandler(
+                Erebot\CallableWrapper::wrap(array($this, 'handleRoulette')),
+                new \Erebot\Event\Match\All(
+                    new \Erebot\Event\Match\Type(
+                        '\\Erebot\\Interfaces\\Event\\ChanText'
                     ),
-                    new Erebot_Event_Match_TextStatic($trigger, TRUE)
+                    new \Erebot\Event\Match\TextStatic($trigger, true)
                 )
             );
-            $this->_connection->addEventHandler($this->_handler);
+            $this->connection->addEventHandler($this->handler);
 
             $cls = $this->getFactory('!Callable');
             $this->registerHelpMethod(new $cls(array($this, 'getHelp')));
@@ -96,45 +95,43 @@ extends Erebot_Module_Base
     /**
      * Provides help about this module.
      *
-     * \param Erebot_Interface_Event_Base_TextMessage $event
+     * \param Erebot::Interfaces::Event::Base::TextMessage $event
      *      Some help request.
      *
-     * \param Erebot_Interface_TextWrapper $words
+     * \param Erebot::Interfaces::TextWrapper $words
      *      Parameters passed with the request. This is the same
      *      as this module's name when help is requested on the
      *      module itself (in opposition with help on a specific
      *      command provided by the module).
      */
     public function getHelp(
-        Erebot_Interface_Event_Base_TextMessage $event,
-        Erebot_Interface_TextWrapper            $words
-    )
-    {
-        if ($event instanceof Erebot_Interface_Event_Base_Private) {
+        \Erebot\Interfaces\Event\Base\TextMessage   $event,
+        \Erebot\Interfaces\TextWrapper              $words
+    ) {
+        if ($event instanceof \Erebot\Interfaces\Event\Base\PrivateMessage) {
             $target = $event->getSource();
-            $chan   = NULL;
-        }
-        else
+            $chan   = null;
+        } else {
             $target = $chan = $event->getChan();
+        }
 
         $fmt        = $this->getFormatter($chan);
         $trigger    = $this->parseString('trigger', 'roulette');
-
-        $moduleName = strtolower(get_class());
         $nbArgs     = count($words);
 
-        if ($nbArgs == 1 && $words[0] == $moduleName) {
+        if ($nbArgs == 1 && $words[0] === get_called_class()) {
             $msg = $fmt->_(
                 'Provides the <b><var name="trigger"/></b> command which '.
                 'makes you play in the russian roulette game.',
                 array('trigger' => $trigger)
             );
             $this->sendMessage($target, $msg);
-            return TRUE;
+            return true;
         }
 
-        if ($nbArgs < 2)
-            return FALSE;
+        if ($nbArgs < 2) {
+            return false;
+        }
 
         if ($words[1] == $trigger) {
             $msg = $fmt->_(
@@ -143,7 +140,7 @@ extends Erebot_Module_Base
                 array('trigger' => $trigger)
             );
             $this->sendMessage($target, $msg);
-            return TRUE;
+            return true;
         }
     }
 
@@ -151,47 +148,46 @@ extends Erebot_Module_Base
      * Handles a request to pull the trigger
      * of the Russian Roulette gun.
      *
-     * \param Erebot_Interface_EventHandler $handler
+     * \param Erebot::Interfaces::EventHandler $handler
      *      Handler that triggered this event.
      *
-     * \param Erebot_Interface_Event_Base_ChanText $event
+     * \param Erebot::Interfaces::Event::Base::ChanText $event
      *      A request to pull the trigger.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function handleRoulette(
-        Erebot_Interface_EventHandler   $handler,
-        Erebot_Interface_Event_ChanText $event
-    )
-    {
+        \Erebot\Interfaces\EventHandler   $handler,
+        \Erebot\Interfaces\Event\ChanText $event
+    ) {
         $nick       = $event->getSource();
         $chan       = $event->getChan();
-        $action     = NULL;
-        $chamber    = $this->_roulette->getPassedChambersCount()+1;
-        $total      = $this->_roulette->getChambersCount();
+        $action     = null;
+        $chamber    = $this->roulette->getPassedChambersCount()+1;
+        $total      = $this->roulette->getChambersCount();
         $fmt        = $this->getFormatter($chan);
 
         try {
-            $state = $this->_roulette->next($nick);
-        }
-        catch (Erebot_Module_Roulette_TwiceInARowException $e) {
+            $state = $this->roulette->next($nick);
+        } catch (\Erebot\Module\Roulette\TwiceInARowException $e) {
             $this->sendMessage(
                 $chan,
                 $fmt->_('You cannot go twice in a row')
             );
-            return $event->preventDefault(TRUE);
+            return $event->preventDefault(true);
         }
 
         switch ($state) {
-            case Erebot_Module_Roulette_Game::STATE_RELOAD:
+            case \Erebot\Module\Roulette\Game::STATE_RELOAD:
                 $action = $fmt->_('spins the cylinder');
                 // Fall through
-            case Erebot_Module_Roulette_Game::STATE_NORMAL:
+
+            case \Erebot\Module\Roulette\Game::STATE_NORMAL:
                 $ending = $fmt->_('+click+');
                 break;
 
-            case Erebot_Module_Roulette_Game::STATE_BANG:
+            case \Erebot\Module\Roulette\Game::STATE_BANG:
                 $ending = $fmt->_('<b>*BANG*</b>');
                 $action = $fmt->_('reloads');
                 break;
@@ -209,9 +205,9 @@ extends Erebot_Module_Base
         );
         $this->sendMessage($chan, $msg);
 
-        if ($action !== NULL)
+        if ($action !== null) {
             $this->sendCommand("PRIVMSG $chan :\001ACTION $action\001");
-        return $event->preventDefault(TRUE);
+        }
+        return $event->preventDefault(true);
     }
 }
-

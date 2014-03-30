@@ -16,23 +16,25 @@
     along with Erebot.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+namespace Erebot\Module\Roulette;
+
 /**
  * \brief
  *      An implementation of a Russian Roulette game.
  */
-class   Erebot_Module_Roulette_Game
+class Game
 {
     /// Stores something that identifies the last shooter.
-    protected $_lastShooter;
+    protected $lastShooter;
 
     /// Number of shots fired until now.
-    protected $_shotCount;
+    protected $shotCount;
 
     /// Number of the chamber containing the bullet.
-    protected $_loadedChamber;
+    protected $loadedChamber;
 
     /// Number of chambers in this gun.
-    protected $_nbChambers;
+    protected $nbChambers;
 
 
     /// The current chamber was empty.
@@ -73,19 +75,20 @@ class   Erebot_Module_Roulette_Game
      */
     public function next($shooter)
     {
-        if ($shooter == $this->_lastShooter)
-            throw new Erebot_Module_Roulette_TwiceInARowException();
+        if ($shooter == $this->lastShooter) {
+            throw new \Erebot\Module\Roulette\TwiceInARowException();
+        }
 
-        $this->_lastShooter = $shooter;
-        $this->_shotCount++;
+        $this->lastShooter = $shooter;
+        $this->shotCount++;
 
-        if ($this->_shotCount == $this->_nbChambers-1 &&
-            $this->_loadedChamber == $this->_nbChambers) {
+        if ($this->shotCount == $this->nbChambers-1 &&
+            $this->loadedChamber == $this->nbChambers) {
             $this->reset();
             return self::STATE_RELOAD;
         }
 
-        if ($this->_shotCount == $this->_loadedChamber) {
+        if ($this->shotCount == $this->loadedChamber) {
             $this->reset();
             return self::STATE_BANG;
         }
@@ -98,9 +101,9 @@ class   Erebot_Module_Roulette_Game
      */
     public function reset()
     {
-        $this->_loadedChamber = $this->_getRandom($this->_nbChambers);
-        $this->_shotCount   = 0;
-        $this->_lastShooter = NULL;
+        $this->loadedChamber    = $this->getRandom($this->nbChambers);
+        $this->shotCount        = 0;
+        $this->lastShooter      = null;
     }
 
     /**
@@ -114,7 +117,7 @@ class   Erebot_Module_Roulette_Game
      * \retval int
      *      A random value between 1 and $max.
      */
-    protected function _getRandom($max)
+    protected function getRandom($max)
     {
         return mt_rand(1, $max);
     }
@@ -128,7 +131,7 @@ class   Erebot_Module_Roulette_Game
      */
     public function getPassedChambersCount()
     {
-        return $this->_shotCount;
+        return $this->shotCount;
     }
 
     /**
@@ -139,7 +142,7 @@ class   Erebot_Module_Roulette_Game
      */
     public function getChambersCount()
     {
-        return $this->_nbChambers;
+        return $this->nbChambers;
     }
 
     /**
@@ -150,11 +153,11 @@ class   Erebot_Module_Roulette_Game
      */
     public function setChambersCount($nbChambers)
     {
-        if (!is_int($nbChambers) || $nbChambers < 2)
-            throw new Erebot_Module_Roulette_AtLeastTwoChambersException();
+        if (!is_int($nbChambers) || $nbChambers < 2) {
+            throw new \Erebot\Module\Roulette\AtLeastTwoChambersException();
+        }
 
-        $this->_nbChambers = $nbChambers;
+        $this->nbChambers = $nbChambers;
         $this->reset();
     }
 }
-
