@@ -23,7 +23,7 @@ namespace Erebot\Module;
  *      A module that provides an implementation
  *      of a Russian Roulette game.
  */
-class Roulette extends \Erebot\Module\Base
+class Roulette extends \Erebot\Module\Base implements \Erebot\Interfaces\HelpEnabled
 {
     /// The actual Russian Roulette gun.
     protected $roulette = null;
@@ -77,7 +77,7 @@ class Roulette extends \Erebot\Module\Base
             }
 
             $this->handler = new \Erebot\EventHandler(
-                Erebot\CallableWrapper::wrap(array($this, 'handleRoulette')),
+                \Erebot\CallableWrapper::wrap(array($this, 'handleRoulette')),
                 new \Erebot\Event\Match\All(
                     new \Erebot\Event\Match\Type(
                         '\\Erebot\\Interfaces\\Event\\ChanText'
@@ -86,9 +86,6 @@ class Roulette extends \Erebot\Module\Base
                 )
             );
             $this->connection->addEventHandler($this->handler);
-
-            $cls = $this->getFactory('!Callable');
-            $this->registerHelpMethod(new $cls(array($this, 'getHelp')));
         }
     }
 
