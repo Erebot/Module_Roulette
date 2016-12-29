@@ -1,0 +1,110 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2011-2016, Erebot
+# This file is distributed under the same license as the Erebot_Module_Roulette package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Erebot_Module_Roulette 1.0.x-dev\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-30 00:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+#
+# File: ../src/Configuration.rst, line: 10
+msgid "Configuration"
+msgstr "Configuration"
+#
+# File: ../src/Configuration.rst, line: 15
+msgid "Options"
+msgstr "Options"
+#
+# File: ../src/Configuration.rst, line: 17
+msgid "This module provides several configuration options."
+msgstr "This module provides several configuration options."
+#
+# File: ../src/Configuration.rst, line: 0
+msgid "Options for |project|"
+msgstr "Options for |project|"
+#
+# File: ../src/Configuration.rst, line: 22
+msgid "Name"
+msgstr "Name"
+#
+# File: ../src/Configuration.rst, line: 22
+msgid "Type"
+msgstr "Type"
+#
+# File: ../src/Configuration.rst, line: 22
+msgid "Default value"
+msgstr "Default value"
+#
+# File: ../src/Configuration.rst, line: 22
+msgid "Description"
+msgstr "Description"
+#
+# File: ../src/Configuration.rst, line: 25
+msgid "chambers"
+msgstr "chambers"
+#
+# File: ../src/Configuration.rst, line: 25
+msgid "integer"
+msgstr "integer"
+#
+# File: ../src/Configuration.rst, line: 25
+msgid "6"
+msgstr "6"
+#
+# File: ../src/Configuration.rst, line: 25
+msgid "How many chambers the cylinder used in this game has."
+msgstr "How many chambers the cylinder used in this game has."
+#
+# File: ../src/Configuration.rst, line: 28
+msgid "trigger"
+msgstr "trigger"
+#
+# File: ../src/Configuration.rst, line: 28
+msgid "string"
+msgstr "string"
+#
+# File: ../src/Configuration.rst, line: 28
+msgid "\"roulette\""
+msgstr "\"roulette\""
+#
+# File: ../src/Configuration.rst, line: 28
+msgid "The command to use to pull the trigger of the Roulette game."
+msgstr "The command to use to pull the trigger of the Roulette game."
+#
+# File: ../src/Configuration.rst, line: 33
+msgid ""
+"The trigger should only contain alphanumeric characters (in particular, do "
+"not add any prefix, like \"!\" to that value)."
+msgstr ""
+"The trigger should only contain alphanumeric characters (in particular, do "
+"not add any prefix, like \"!\" to that value)."
+#
+# File: ../src/Configuration.rst, line: 37
+msgid "Example"
+msgstr "Example"
+#
+# File: ../src/Configuration.rst, line: 39
+msgid ""
+"In this example, we configure the bot to check the latency every 2 minutes "
+"(120 seconds). The IRC server has 15 seconds to respond to our latency "
+"checks. If it does not answer by then, the bot will disconnect from that IRC "
+"server and will wait for another full minute before attempting a "
+"reconnection. Moreover, the command \"!latency\" can be used at any time to "
+"display the current latency."
+msgstr ""
+"In this example, we configure the bot to check the latency every 2 minutes "
+"(120 seconds). The IRC server has 15 seconds to respond to our latency "
+"checks. If it does not answer by then, the bot will disconnect from that IRC "
+"server and will wait for another full minute before attempting a "
+"reconnection. Moreover, the command \"!latency\" can be used at any time to "
+"display the current latency."
