@@ -40,7 +40,7 @@ extends \Erebot\Module\Roulette\Game
 }
 
 class   RouletteTest
-extends PHPUnit_Framework_TestCase
+extends \PHPUnit\Framework\TestCase
 {
     protected $roulette     = NULL;
     const NB_CHAMBERS       = 6;
