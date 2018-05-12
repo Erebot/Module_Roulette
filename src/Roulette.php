@@ -77,7 +77,7 @@ class Roulette extends \Erebot\Module\Base implements \Erebot\Interfaces\HelpEna
             }
 
             $this->handler = new \Erebot\EventHandler(
-                \Erebot\CallableWrapper::wrap(array($this, 'handleRoulette')),
+                array($this, 'handleRoulette'),
                 new \Erebot\Event\Match\All(
                     new \Erebot\Event\Match\Type(
                         '\\Erebot\\Interfaces\\Event\\ChanText'
